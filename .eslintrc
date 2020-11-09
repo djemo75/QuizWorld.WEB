@@ -1,0 +1,35 @@
+{
+  "env": {
+    "browser": true,
+    "es2020": true
+  },
+  "extends": [
+    "react-app",
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "plugins": ["import", "simple-import-sort"],
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 11,
+    "sourceType": "module"
+  },
+  "rules": {
+    "simple-import-sort/sort": "warn",
+    "sort-imports": "off",
+    "import/order": "off",
+    "linebreak-style": "off",
+    "quotes": ["error", "double"],
+    "semi": ["error", "always"],
+    "prettier/prettier": ["error"],
+    "eqeqeq": "error",
+    "no-unused-vars": "warn",
+    "no-unused-labels": "warn",
+    "no-unused-expressions": "warn",
+    "react/prop-types": 0,
+    "react/display-name": [0]
+  }
+}
