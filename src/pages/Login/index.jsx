@@ -129,7 +129,7 @@ const Login = (props) => {
             align-items: center;
             flex-direction: column;
           }
-          .login-icon {
+          :global(.content .login-icon) {
             margin: 8px;
             background-color: #f50057;
           }
@@ -137,7 +137,7 @@ const Login = (props) => {
             width: 100%;
             margin-top: 8px;
           }
-          .submit-btn {
+          :global(.content .login-form .submit-btn) {
             margin: 24px 0px 16px;
           }
           .login-error {

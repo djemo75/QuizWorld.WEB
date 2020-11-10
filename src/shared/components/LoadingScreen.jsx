@@ -7,14 +7,16 @@ export const LoadingScreen = () => {
       <div className="loading-screen">
         <CircularProgress />
       </div>
-      <style jsx>{`
-        .loading-screen {
-          min-height: 100%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-      `}</style>
+      <style jsx>
+        {`
+          .loading-screen {
+            min-height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+        `}
+      </style>
     </>
   );
 };

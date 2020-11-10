@@ -72,7 +72,7 @@ export const Navigation = () => {
           </div>
         </Toolbar>
       </AppBar>
-      <style jsx>{`
+      <style jsx global>{`
         .toolbar {
           display: flex;
           justify-content: space-between;
