@@ -20,6 +20,7 @@ const Input = (props) => {
         variant={props.variant ? props.variant : "outlined"}
         size={props.size}
         rows={props.rows}
+        rowsMax={props.rowsMax}
         multiline={props.multiline}
         onChange={props.customOnChange ? props.customOnChange : props.onChange}
         onBlur={props.onBlur}
@@ -50,6 +51,7 @@ export const FormikField = (props) => {
         disabled={props.disabled}
         variant={props.variant}
         rows={props.rows ? props.rows : "5"}
+        rowsMax={props.rowsMax}
         multiline={props.multiline}
         size={props.size}
         error={props.error}

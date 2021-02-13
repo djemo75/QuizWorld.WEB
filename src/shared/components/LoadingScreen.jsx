@@ -1,7 +1,7 @@
 import { CircularProgress } from "@material-ui/core";
 import React from "react";
 
-export const LoadingScreen = () => {
+export const LoadingScreen = ({ fullHeight }) => {
   return (
     <>
       <div className="loading-screen">
@@ -10,7 +10,8 @@ export const LoadingScreen = () => {
       <style jsx>
         {`
           .loading-screen {
-            min-height: 100%;
+            width: 100%;
+            min-height: ${fullHeight ? "100%" : "0%"};
             display: flex;
             justify-content: center;
             align-items: center;

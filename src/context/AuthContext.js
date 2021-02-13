@@ -3,9 +3,8 @@ import React, { createContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 
 import { STATIC_ROUTES } from "../routes";
-import { getProfileRequest, loginRequest } from "../services";
+import { getProfileRequest, loginRequest, registerRequest } from "../services";
 import { LoadingScreen } from "../shared/components/LoadingScreen";
-import { extractError } from "../utils/error";
 import { successNotification } from "../utils/notifications";
 
 export const AuthContext = createContext();
@@ -14,26 +13,38 @@ const DEFAULT_STATE = {
   user: undefined,
   loading: true,
   error: undefined,
+
   loginLoading: false,
   loginError: undefined,
+
+  registerLoading: false,
+  registerError: undefined,
 };
 
 const AuthProvider = (props) => {
   const [state, setState] = useState(DEFAULT_STATE);
   const history = useHistory();
 
+  useEffect(() => {
+    getProfile();
+  }, []); // eslint-disable-line
+
   const getProfile = async () => {
     const token = localStorage.getItem("access_token");
-    if (jwt.decode(token)) {
-      try {
-        setState({ ...state, loading: true, error: undefined });
-        const { data } = await getProfileRequest();
-        setState({ ...state, loading: false, user: data });
-      } catch (e) {
-        setState({ ...state, loading: false, error: e.message });
+    if (token) {
+      if (jwt.decode(token)) {
+        try {
+          setState({ ...state, loading: true, error: undefined });
+          const { data } = await getProfileRequest();
+          setState({ ...state, loading: false, user: data });
+        } catch (e) {
+          setState({ ...state, loading: false, error: e.message });
+        }
+      } else {
+        logout();
       }
     } else {
-      logout();
+      setState({ ...state, loading: false, user: undefined, error: undefined });
     }
   };
 
@@ -42,12 +53,28 @@ const AuthProvider = (props) => {
       setState({ ...state, loginLoading: true, loginError: undefined });
       const { data } = await loginRequest(values);
       localStorage.setItem("access_token", data.accessToken);
-      setState({ ...state, loginLoading: false });
+      setState({ ...state, loginLoading: false, loginError: undefined });
       await getProfile();
-      history.push(STATIC_ROUTES.home);
       successNotification("Successfully logged in!");
-    } catch (e) {
-      setState({ ...state, loginLoading: false, loginError: extractError(e) });
+      history.push(STATIC_ROUTES.home);
+    } catch (error) {
+      setState({ ...state, loginLoading: false, loginError: error });
+    }
+  };
+
+  const register = async (values) => {
+    try {
+      setState({ ...state, registerLoading: true, registerError: undefined });
+      await registerRequest(values);
+      setState({ ...state, registerLoading: false, registerError: undefined });
+      successNotification("Successfully registered!");
+      history.push(STATIC_ROUTES.login);
+    } catch (error) {
+      setState({
+        ...state,
+        registerLoading: false,
+        registerError: error,
+      });
     }
   };
 
@@ -57,13 +84,13 @@ const AuthProvider = (props) => {
     history.push(STATIC_ROUTES.login);
   };
 
-  useEffect(() => {
-    getProfile();
-  }, []); // eslint-disable-line
+  const isAdmin = state.user?.role === "admin";
 
   return (
-    <AuthContext.Provider value={{ ...state, getProfile, login, logout }}>
-      {state.loading ? <LoadingScreen /> : props.children}
+    <AuthContext.Provider
+      value={{ ...state, getProfile, login, logout, register, isAdmin }}
+    >
+      {state.loading ? <LoadingScreen fullHeight /> : props.children}
     </AuthContext.Provider>
   );
 };

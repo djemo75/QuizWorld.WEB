@@ -2,15 +2,42 @@ import axios from "axios";
 
 const baseURL = "http://localhost:5000/api/";
 
-const instance = axios.create({
-  baseURL: baseURL,
-});
+const axiosSetup = () => {
+  axios.interceptors.request.use((request) => {
+    const accessToken = localStorage.getItem("access_token");
+    request.baseURL = baseURL;
+    request.headers.common["Authorization"] = `Bearer ${accessToken}`;
 
-instance.interceptors.request.use((config) => {
-  const accessToken = localStorage.getItem("access_token");
-  config.headers.common["Authorization"] = `Bearer ${accessToken}`;
+    return request;
+  });
 
-  return config;
-});
+  axios.interceptors.response.use(
+    (response) => {
+      return response;
+    },
+    (error) => {
+      return Promise.reject(extractError(error));
+    },
+  );
+};
 
-export default instance;
+const extractError = ({ response }) => {
+  if (!navigator.onLine) {
+    return "Network problem!";
+  } else {
+    if (
+      response &&
+      response.data &&
+      typeof response.data === "object" &&
+      typeof response.data.message === "string"
+    ) {
+      return response.data.message;
+    } else if (response && response.data && typeof response.data === "string") {
+      return response.data;
+    } else {
+      return "For some reason the request failed!";
+    }
+  }
+};
+
+export default axiosSetup;

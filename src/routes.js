@@ -2,15 +2,29 @@ import React, { useContext } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 
 import { AuthContext } from "./context/AuthContext";
-import Home from "./pages/Home";
 import Login from "./pages/Login";
+import NotFound from "./pages/NotFound";
+import Register from "./pages/Register";
+import SolveTest from "./pages/SolveTest";
+import TestParticipants from "./pages/TestParticipants";
+import TestResults from "./pages/TestResults";
+import Tests from "./pages/Tests";
+import Users from "./pages/Users";
+import ViewTest from "./pages/ViewTest";
 
 export const STATIC_ROUTES = {
+  notFound: "/not-found",
   home: "/",
   login: "/login",
   register: "/register",
   profile: "/profile",
   users: "/users",
+  tests: "/tests",
+  viewTest: "/tests/:id",
+  solveTest: "/tests/:id/solve",
+  testResults: "/tests/:id/results",
+  viewTestResult: "/results/:id",
+  testParticipants: "/tests/:id/participants",
 };
 
 const authRoutes = [
@@ -27,7 +41,7 @@ const authRoutes = [
   {
     path: STATIC_ROUTES.register,
     exact: true,
-    component: () => <>Register page</>,
+    component: () => <Register />,
   },
 ];
 
@@ -35,7 +49,32 @@ const routes = [
   {
     path: STATIC_ROUTES.home,
     exact: true,
-    component: () => <Home />,
+    component: () => <Redirect to={STATIC_ROUTES.tests} />,
+  },
+  {
+    path: STATIC_ROUTES.tests,
+    exact: true,
+    component: () => <Tests />,
+  },
+  {
+    path: STATIC_ROUTES.viewTest,
+    exact: true,
+    component: () => <ViewTest />,
+  },
+  {
+    path: STATIC_ROUTES.solveTest,
+    exact: true,
+    component: () => <SolveTest />,
+  },
+  {
+    path: STATIC_ROUTES.testResults,
+    exact: true,
+    component: () => <TestResults />,
+  },
+  {
+    path: STATIC_ROUTES.testParticipants,
+    exact: true,
+    component: () => <TestParticipants />,
   },
   {
     path: STATIC_ROUTES.profile,
@@ -45,7 +84,7 @@ const routes = [
   {
     path: STATIC_ROUTES.users,
     exact: true,
-    component: () => <>Users</>,
+    component: () => <Users />,
   },
 ];
 
@@ -57,7 +96,16 @@ export const Routes = () => {
       {!user
         ? authRoutes.map((route, i) => <Route key={i} {...route} />)
         : routes.map((route, i) => <Route key={i} {...route} />)}
-      <Route path="*" component={() => <>Not Found</>} />
+
+      <Route
+        path={STATIC_ROUTES.notFound}
+        exact
+        component={() => <NotFound />}
+      />
+      <Route
+        path="*"
+        component={() => <Redirect to={STATIC_ROUTES.notFound} />}
+      />
     </Switch>
   );
 };
