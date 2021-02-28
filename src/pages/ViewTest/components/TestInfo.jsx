@@ -11,35 +11,20 @@ import moment from "moment";
 import React, { useContext, useState } from "react";
 
 import { AuthContext } from "../../../context/AuthContext";
-import { editTestById } from "../../../services/tests";
-import {
-  errorNotification,
-  successNotification,
-} from "../../../utils/notifications";
-import { TestFormDialog } from "../../Tests/TestFormDialog";
-import { DeleteTestDialog } from "./dialogs/DeleteTestDialog";
+import { TestContext } from "../../../context/TestContext";
+import { TestFormDialog } from "../../Tests/dialogs/TestFormDialog";
+import { DeleteTestDialog } from "../dialogs/DeleteTestDialog";
 
 const DEFAULT_VISIBLE_STATE = { delete: false, edit: false };
 
-export const TestInfo = ({ test, fetchData }) => {
+export const TestInfo = ({ test }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [visible, setVisible] = useState(DEFAULT_VISIBLE_STATE);
   const { user, isAdmin } = useContext(AuthContext);
+  const { editTest, editTestLoading } = useContext(TestContext);
 
-  const handleEdit = async (values, { setSubmitting }) => {
-    const payload = values;
-    delete payload.createdAt;
-    try {
-      setSubmitting(true);
-      await editTestById(test.id, payload);
-      setSubmitting(false);
-      setVisible(false);
-      fetchData();
-      successNotification("Successfully edited!");
-    } catch (error) {
-      errorNotification(error);
-      setSubmitting(false);
-    }
+  const handleEdit = (values) => {
+    editTest(test.id, values, () => setVisible(false));
   };
 
   return (
@@ -122,6 +107,7 @@ export const TestInfo = ({ test, fetchData }) => {
         values={test}
         handleClose={() => setVisible(DEFAULT_VISIBLE_STATE)}
         handleSubmit={handleEdit}
+        loading={editTestLoading}
         editMode
       />
 

@@ -4,7 +4,10 @@ import React from "react";
 export const StatisticItem = ({ icon, text, count, onClick, loading }) => {
   return (
     <>
-      <div className="statistic-item" onClick={onClick}>
+      <div
+        className="statistic-item"
+        onClick={() => onClick && !loading && onClick()}
+      >
         <Box className="icon-wrapper">{icon}</Box>
         <Box fontSize="0.75rem" px={1} py={0.75}>
           {text}
@@ -26,7 +29,11 @@ export const StatisticItem = ({ icon, text, count, onClick, loading }) => {
           color: #fff;
           position: relative;
           overflow: hidden;
-          cursor: ${onClick ? "pointer" : "default"};
+          cursor: ${!loading && onClick
+            ? "pointer"
+            : loading && onClick
+            ? "not-allowed"
+            : "default"};
         }
         :global(.statistic-item .icon-wrapper svg) {
           position: absolute;

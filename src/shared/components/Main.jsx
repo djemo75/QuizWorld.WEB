@@ -18,7 +18,7 @@ export const Main = ({ title, children, buttons }) => {
         .main-header {
           display: flex;
           justify-content: space-between;
-          min-height: 36px;
+          min-height: ${!title && !buttons ? "0px" : "36px"};
           margin-bottom: 10px;
         }
         .main-content {

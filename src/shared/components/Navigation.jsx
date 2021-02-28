@@ -44,10 +44,13 @@ export const Navigation = () => {
       >
         <Toolbar className="toolbar">
           <div className="left-side">
-            <Link to={STATIC_ROUTES.home} className="navigation-link">
+            <Link to={STATIC_ROUTES.myResults} className="navigation-link">
               <img className="logo" src={logo} alt="QuizWorld" />
             </Link>
             <div className="navigation">
+              <Link to={STATIC_ROUTES.myResults} className="navigation-link">
+                My results
+              </Link>
               <Link to={STATIC_ROUTES.tests} className="navigation-link">
                 Tests
               </Link>

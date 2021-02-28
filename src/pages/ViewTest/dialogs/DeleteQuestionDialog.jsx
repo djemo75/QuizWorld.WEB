@@ -1,12 +1,12 @@
 import { Button, CircularProgress } from "@material-ui/core";
 import React, { useState } from "react";
 
-import { deleteQuestionById } from "../../../../services/questions";
-import { CustomDialog } from "../../../../shared/components/CustomDialog";
+import { deleteQuestionById } from "../../../services/questions";
+import { CustomDialog } from "../../../shared/components/CustomDialog";
 import {
   errorNotification,
   successNotification,
-} from "../../../../utils/notifications";
+} from "../../../utils/notifications";
 
 export const DeleteQuestionDialog = ({
   question,

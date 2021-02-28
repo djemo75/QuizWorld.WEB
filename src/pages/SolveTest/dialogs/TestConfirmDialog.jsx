@@ -21,7 +21,7 @@ export const TestConfirmDialog = ({
   };
 
   const handleRedirect = () => {
-    history.push(STATIC_ROUTES.home);
+    history.push(STATIC_ROUTES.myResults);
   };
 
   return (

@@ -1,17 +1,13 @@
 import { Box, Button, TextField } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import { INITIAL_PAGE_SIZE } from "../../constants/table";
-import { createTest, getAllTests } from "../../services/tests";
+import TestProvider, { TestContext } from "../../context/TestContext";
 import { CustomTable } from "../../shared/components/CustomTable";
 import { Main } from "../../shared/components/Main";
 import { SearchButton } from "../../shared/components/SearchButton";
-import {
-  errorNotification,
-  successNotification,
-} from "../../utils/notifications";
 import { testTableColumns } from "./constants";
-import { TestFormDialog } from "./TestFormDialog";
+import { TestFormDialog } from "./dialogs/TestFormDialog";
 
 const DEFAULT_SORTING_VALUES = {
   sortBy: "createdAt",
@@ -20,13 +16,18 @@ const DEFAULT_SORTING_VALUES = {
 
 const Tests = (props) => {
   const [visible, setVisible] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [tests, setTests] = useState([]);
-  const [totalCount, setTotalCount] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(INITIAL_PAGE_SIZE);
   const [sortingValues, setSortingValues] = useState(DEFAULT_SORTING_VALUES);
   const [searchString, setSearchString] = useState("");
+  const {
+    getTests,
+    tests,
+    testsTotal,
+    testsLoading,
+    createTest,
+    createTestLoading,
+  } = useContext(TestContext);
 
   useEffect(() => {
     fetchData();
@@ -40,30 +41,14 @@ const Tests = (props) => {
       params = { ...params, sortBy, sortDirection };
     }
 
-    try {
-      setLoading(true);
-      const { data } = await getAllTests(params);
-      setTests(data.tests);
-      setTotalCount(data.totalCount);
-      setLoading(false);
-    } catch (error) {
-      errorNotification(error);
-      setLoading(false);
-    }
+    getTests(params);
   };
 
-  const handleCreate = async (values, { setSubmitting }) => {
-    try {
-      setSubmitting(true);
-      await createTest(values);
-      setSubmitting(false);
-      setVisible(false);
+  const handleCreate = (values) => {
+    createTest(values, () => {
       fetchData();
-      successNotification("Successfully created!");
-    } catch (error) {
-      errorNotification(error);
-      setSubmitting(false);
-    }
+      setVisible(false);
+    });
   };
 
   return (
@@ -85,31 +70,42 @@ const Tests = (props) => {
           name="searchString"
           value={searchString}
           onChange={(e) => setSearchString(e.target.value)}
+          onKeyPress={({ charCode }) => charCode === 13 && fetchData()}
           variant="outlined"
           size="small"
         />
-
         <SearchButton onClick={() => fetchData()} />
       </Box>
+
       <CustomTable
         columns={testTableColumns}
         data={tests}
-        totalCount={totalCount}
+        totalCount={testsTotal}
         pageNumber={pageNumber}
         pageSize={pageSize}
         handleChangePage={(page) => setPageNumber(page)}
         handleChangePageSize={setPageSize}
         sortingValues={sortingValues}
         setSortingValues={setSortingValues}
-        loading={loading}
+        loading={testsLoading}
       />
+
       <TestFormDialog
         visible={visible}
         handleClose={() => setVisible(false)}
         handleSubmit={handleCreate}
+        loading={createTestLoading}
       />
     </Main>
   );
 };
 
-export default Tests;
+const HOC = (props) => {
+  return (
+    <TestProvider>
+      <Tests {...props} />
+    </TestProvider>
+  );
+};
+
+export default HOC;

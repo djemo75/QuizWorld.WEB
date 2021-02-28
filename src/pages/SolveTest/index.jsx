@@ -1,26 +1,19 @@
 import { Button, Grid } from "@material-ui/core";
-import Alert from "@material-ui/lab/Alert";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { ACTIVE_TEST } from "../../constants/tests";
-import { getQuestionsWithOptionsByTestId } from "../../services/questions";
+import TestProvider, { TestContext } from "../../context/TestContext";
 import { solveTestById } from "../../services/tests";
-import { getTestById } from "../../services/tests";
 import { LoadingScreen } from "../../shared/components/LoadingScreen";
 import { Main } from "../../shared/components/Main";
 import { errorNotification } from "../../utils/notifications";
 import { QuestionsList } from "../ViewTest/components/QuestionsList";
-import { TestConfirmDialog } from "./components/TestConfirmDialog";
 import { TestHeader } from "./components/TestHeader";
+import { TestConfirmDialog } from "./dialogs/TestConfirmDialog";
 
 const SolveTest = () => {
   const params = useParams();
-  const [test, setTest] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [questions, setQuestions] = useState([]);
-  const [questionsLoading, setQuestionsLoading] = useState(false);
-  const [questionsError, setQuestionsError] = useState(false);
   const [answers, setAnswers] = useState([]);
   const [confirmDialog, setConfirmDialog] = useState({
     visible: false,
@@ -28,36 +21,22 @@ const SolveTest = () => {
   });
   const [isSubmiting, setSubmiting] = useState(false);
   const [score, setScore] = useState(null);
+  const {
+    getTest,
+    test,
+    testloading,
+    getQuestionsWithOptions,
+    questions,
+    questionsLoading,
+    questionsError,
+  } = useContext(TestContext);
 
   useEffect(() => {
     fetchTest();
   }, [params.id]); /* eslint-disable-line */
 
-  const fetchTest = async () => {
-    try {
-      setLoading(true);
-      const { data } = await getTestById(params.id);
-      setTest(data);
-      setLoading(false);
-    } catch (error) {
-      errorNotification(error);
-      setLoading(false);
-    }
-  };
-
-  const fetchQuestions = async () => {
-    try {
-      setQuestionsError(false);
-      setQuestionsLoading(true);
-      const { data } = await getQuestionsWithOptionsByTestId(params.id);
-      setQuestions(data);
-      setQuestionsLoading(false);
-    } catch (error) {
-      setQuestionsError(true);
-      errorNotification(error);
-      setQuestionsLoading(false);
-    }
-  };
+  const fetchTest = () => getTest(params.id);
+  const fetchQuestions = () => getQuestionsWithOptions(params.id);
 
   const sendTestForSolving = async () => {
     const payload = answers.map((question) => {
@@ -73,9 +52,9 @@ const SolveTest = () => {
       setSubmiting(true);
       const { data } = await solveTestById(params.id, { data: payload });
       setScore(data);
-      setSubmiting(false);
     } catch (error) {
       errorNotification(error);
+    } finally {
       setSubmiting(false);
     }
   };
@@ -89,7 +68,7 @@ const SolveTest = () => {
 
   return (
     <Main>
-      {loading ? (
+      {testloading ? (
         <LoadingScreen />
       ) : (
         test && (
@@ -103,6 +82,7 @@ const SolveTest = () => {
                 score={score}
               />
             </Grid>
+
             <Grid item xs={12}>
               <QuestionsList
                 data={questions}
@@ -111,6 +91,7 @@ const SolveTest = () => {
                 showActions={false}
               />
             </Grid>
+
             <TestConfirmDialog
               {...confirmDialog}
               handleClose={() =>
@@ -148,4 +129,12 @@ const SolveTest = () => {
   );
 };
 
-export default SolveTest;
+const HOC = (props) => {
+  return (
+    <TestProvider>
+      <SolveTest {...props} />
+    </TestProvider>
+  );
+};
+
+export default HOC;

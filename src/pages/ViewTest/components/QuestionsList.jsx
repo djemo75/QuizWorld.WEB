@@ -11,7 +11,7 @@ import { isEmpty } from "lodash";
 import React, { useEffect, useState } from "react";
 
 import { LoadingScreen } from "../../../shared/components/LoadingScreen";
-import { DeleteQuestionDialog } from "./dialogs/DeleteQuestionDialog";
+import { DeleteQuestionDialog } from "../dialogs/DeleteQuestionDialog";
 import { QuestionFormDialog } from "./QuestionFormDialog";
 
 const DEFAULT_VISIBLE_STATE = { delete: false, edit: false };
@@ -29,9 +29,7 @@ export const QuestionsList = ({
   const [currentQuestion, setCurrentQuestion] = useState(null);
 
   useEffect(() => {
-    if (data && data.length) {
-      setQuestions(data);
-    }
+    setQuestions(data);
   }, [data]); // eslint-disable-line
 
   useEffect(() => {

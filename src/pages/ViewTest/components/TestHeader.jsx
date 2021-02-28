@@ -10,11 +10,11 @@ import FileCopyOutlinedIcon from "@material-ui/icons/FileCopyOutlined";
 import copy from "copy-to-clipboard";
 import React, { useContext } from "react";
 import { useHistory } from "react-router-dom";
-import { toast } from "react-toastify";
 
 import { ACTIVE_TEST } from "../../../constants/tests";
 import { AuthContext } from "../../../context/AuthContext";
 import { STATIC_ROUTES } from "../../../routes";
+import { successNotification } from "../../../utils/notifications";
 
 export const TestHeader = ({ test }) => {
   const history = useHistory();
@@ -22,7 +22,7 @@ export const TestHeader = ({ test }) => {
 
   const handleCopy = (text) => {
     copy(text);
-    toast.success("Copied to clipboard.");
+    successNotification("Copied to clipboard.");
   };
 
   return (

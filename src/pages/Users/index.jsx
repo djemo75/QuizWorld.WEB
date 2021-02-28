@@ -55,12 +55,14 @@ const Users = (props) => {
           name="searchString"
           value={searchString}
           onChange={(e) => setSearchString(e.target.value)}
+          onKeyPress={({ charCode }) => charCode === 13 && fetchData()}
           variant="outlined"
           size="small"
         />
 
         <SearchButton onClick={() => fetchData()} />
       </Box>
+
       <CustomTable
         columns={usersTableColumns}
         data={users}

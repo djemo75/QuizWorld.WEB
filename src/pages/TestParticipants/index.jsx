@@ -1,11 +1,11 @@
-import { Box, IconButton, Paper } from "@material-ui/core";
-import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
-import React, { useEffect, useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { Box, Paper } from "@material-ui/core";
+import React, { useContext, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 import { INITIAL_PAGE_SIZE } from "../../constants/table";
-import { STATIC_ROUTES } from "../../routes";
-import { getTestById, getTestParticipantsById } from "../../services/tests";
+import TestProvider, { TestContext } from "../../context/TestContext";
+import { getTestParticipantsById } from "../../services/tests";
+import { BackButton } from "../../shared/components/BackButton";
 import { CustomTable } from "../../shared/components/CustomTable";
 import { LoadingScreen } from "../../shared/components/LoadingScreen";
 import { Main } from "../../shared/components/Main";
@@ -21,9 +21,6 @@ const DEFAULT_SORTING_VALUES = {
 
 const TestParticipants = (props) => {
   const params = useParams();
-  const history = useHistory();
-  const [test, setTest] = useState(null);
-  const [loading, setLoading] = useState(false);
   const [participants, setParticipants] = useState([]);
   const [participantsLoading, setParticipantsLoading] = useState(false);
   const [totalCount, setTotalCount] = useState(null);
@@ -33,6 +30,7 @@ const TestParticipants = (props) => {
   const [pageSize, setPageSize] = useState(INITIAL_PAGE_SIZE);
   const [visible, setVisible] = useState(false);
   const [currentParticipant, setCurrentParticipant] = useState(null);
+  const { getTest, test, testLoading } = useContext(TestContext);
 
   useEffect(() => {
     fetchTest();
@@ -44,17 +42,7 @@ const TestParticipants = (props) => {
     }
   }, [test, pageNumber, pageSize, sortingValues]); /* eslint-disable-line */
 
-  const fetchTest = async () => {
-    try {
-      setLoading(true);
-      const { data } = await getTestById(params.id);
-      setTest(data);
-      setLoading(false);
-    } catch (error) {
-      errorNotification(error);
-      setLoading(false);
-    }
-  };
+  const fetchTest = () => getTest(params.id);
 
   const fetchParticipants = async () => {
     const requestParams = {
@@ -86,13 +74,9 @@ const TestParticipants = (props) => {
     return testParticipantsTableColumns(actions);
   };
 
-  const handleBack = () => {
-    history.push(STATIC_ROUTES.viewTest.replace(":id", params.id));
-  };
-
   return (
     <Main title="Participants">
-      {loading ? (
+      {testLoading ? (
         <LoadingScreen />
       ) : (
         test && (
@@ -100,22 +84,14 @@ const TestParticipants = (props) => {
             <Box
               component={Paper}
               display="flex"
-              justifyContent="space-between"
+              alignItems="center"
               bgcolor="primary.dark"
               color="primary.contrastText"
               padding="19.5px 30px"
               mb={4}
             >
-              <Box display="flex" alignItems="center">
-                <IconButton
-                  className="back-button"
-                  size="small"
-                  onClick={handleBack}
-                >
-                  <KeyboardBackspaceIcon />
-                </IconButton>
-                <div className="test-title">{test.name}</div>
-              </Box>
+              <BackButton />
+              <div className="test-title">{test.name}</div>
             </Box>
 
             <ActionBar
@@ -151,23 +127,17 @@ const TestParticipants = (props) => {
           font-size: 22px;
           margin-right: 20px;
         }
-        :global(.back-button) {
-          border: 1px solid #fff;
-          background: rgba(255, 255, 255, 0.1);
-          margin-right: 15px;
-        }
-        :global(.back-button:hover) {
-          background: #e6e6e6;
-        }
-        :global(.back-button svg) {
-          color: #fff;
-        }
-        :global(.back-button svg:hover) {
-          color: #2196f3;
-        }
       `}</style>
     </Main>
   );
 };
 
-export default TestParticipants;
+const HOC = (props) => {
+  return (
+    <TestProvider>
+      <TestParticipants {...props} />
+    </TestProvider>
+  );
+};
+
+export default HOC;

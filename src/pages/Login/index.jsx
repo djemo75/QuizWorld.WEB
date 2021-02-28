@@ -5,7 +5,7 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import { Formik } from "formik";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import { AuthContext } from "../../context/AuthContext";
@@ -16,9 +16,13 @@ import { ResponseError } from "../../shared/components/ResponseError";
 import { loginSchema } from "../../validationSchemas/loginSchema";
 
 const Login = (props) => {
-  const { login, loginLoading, loginError } = useContext(AuthContext);
+  const { login, loginLoading, loginError, clearErrors } = useContext(
+    AuthContext,
+  );
 
-  const handleSubmit = (values, actions) => {
+  useEffect(() => clearErrors(), []); //eslint-disable-line
+
+  const handleSubmit = (values) => {
     login(values);
   };
 
@@ -51,7 +55,7 @@ const Login = (props) => {
                     name="username"
                     error={touched.username && errors.username}
                     fullWidth
-                    required
+                    disabled={loginLoading}
                   />
                   <FormikField
                     label="Password"
@@ -59,7 +63,7 @@ const Login = (props) => {
                     error={touched.password && errors.password}
                     type="password"
                     fullWidth
-                    required
+                    disabled={loginLoading}
                   />
                   <Button
                     type="submit"

@@ -10,18 +10,18 @@ import { successNotification } from "../utils/notifications";
 export const AuthContext = createContext();
 
 const DEFAULT_STATE = {
-  user: undefined,
+  user: null,
   loading: true,
-  error: undefined,
-
+  error: null,
+  //
   loginLoading: false,
-  loginError: undefined,
-
+  loginError: null,
+  //
   registerLoading: false,
-  registerError: undefined,
+  registerError: null,
 };
 
-const AuthProvider = (props) => {
+const AuthProvider = ({ children }) => {
   const [state, setState] = useState(DEFAULT_STATE);
   const history = useHistory();
 
@@ -34,63 +34,76 @@ const AuthProvider = (props) => {
     if (token) {
       if (jwt.decode(token)) {
         try {
-          setState({ ...state, loading: true, error: undefined });
+          setState(DEFAULT_STATE);
           const { data } = await getProfileRequest();
-          setState({ ...state, loading: false, user: data });
-        } catch (e) {
-          setState({ ...state, loading: false, error: e.message });
+          setState((s) => ({ ...s, loading: false, user: data }));
+        } catch (error) {
+          setState((s) => ({ ...s, loading: false, error: error.message }));
         }
       } else {
         logout();
       }
     } else {
-      setState({ ...state, loading: false, user: undefined, error: undefined });
+      setState((s) => ({ ...s, loading: false, user: null, error: null }));
     }
   };
 
   const login = async (values) => {
     try {
-      setState({ ...state, loginLoading: true, loginError: undefined });
+      setState((s) => ({ ...s, loginLoading: true, loginError: null }));
       const { data } = await loginRequest(values);
       localStorage.setItem("access_token", data.accessToken);
-      setState({ ...state, loginLoading: false, loginError: undefined });
+      setState((s) => ({ ...s, loginLoading: false, loginError: null }));
       await getProfile();
       successNotification("Successfully logged in!");
-      history.push(STATIC_ROUTES.home);
+      history.push(STATIC_ROUTES.myResults);
     } catch (error) {
-      setState({ ...state, loginLoading: false, loginError: error });
+      setState((s) => ({ ...s, loginLoading: false, loginError: error }));
     }
   };
 
   const register = async (values) => {
     try {
-      setState({ ...state, registerLoading: true, registerError: undefined });
+      setState((s) => ({ ...s, registerLoading: true, registerError: null }));
       await registerRequest(values);
-      setState({ ...state, registerLoading: false, registerError: undefined });
+      setState((s) => ({ ...s, registerLoading: false, registerError: null }));
       successNotification("Successfully registered!");
       history.push(STATIC_ROUTES.login);
     } catch (error) {
-      setState({
-        ...state,
-        registerLoading: false,
-        registerError: error,
-      });
+      setState((s) => ({ ...s, registerLoading: false, registerError: error }));
     }
   };
 
   const logout = () => {
     localStorage.removeItem("access_token");
-    setState({ ...state, loading: false, user: undefined, error: undefined });
+    setState((s) => ({ ...s, loading: false, user: null, error: null }));
     history.push(STATIC_ROUTES.login);
+  };
+
+  const clearErrors = () => {
+    setState((state) => ({
+      ...state,
+      error: null,
+      loginError: null,
+      registerError: null,
+    }));
   };
 
   const isAdmin = state.user?.role === "admin";
 
   return (
     <AuthContext.Provider
-      value={{ ...state, getProfile, login, logout, register, isAdmin }}
+      value={{
+        ...state,
+        getProfile,
+        login,
+        logout,
+        register,
+        clearErrors,
+        isAdmin,
+      }}
     >
-      {state.loading ? <LoadingScreen fullHeight /> : props.children}
+      {state.loading ? <LoadingScreen fullHeight /> : children}
     </AuthContext.Provider>
   );
 };

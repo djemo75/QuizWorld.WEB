@@ -1,14 +1,12 @@
 import { Grid } from "@material-ui/core";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
 
 import { AuthContext } from "../../context/AuthContext";
+import TestProvider, { TestContext } from "../../context/TestContext";
 import { STATIC_ROUTES } from "../../routes";
-import { getQuestionsWithOptionsWithAnswersByTestId } from "../../services/questions";
-import { getTestById, getTestStatistic } from "../../services/tests";
 import { LoadingScreen } from "../../shared/components/LoadingScreen";
 import { Main } from "../../shared/components/Main";
-import { errorNotification } from "../../utils/notifications";
 import { QuestionsActionBar } from "./components/QuestionsActionBar";
 import { QuestionsList } from "./components/QuestionsList";
 import { TestHeader } from "./components/TestHeader";
@@ -18,13 +16,16 @@ import { TestStatisticsAndSettings } from "./components/TestStatisticsAndSetting
 const ViewTest = (props) => {
   const params = useParams();
   const history = useHistory();
-  const [test, setTest] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [questions, setQuestions] = useState([]);
-  const [questionsLoading, setQuestionsLoading] = useState(false);
-  const [statistic, setStatistic] = useState(null);
-  const [statisticLoading, setStatisticLoading] = useState(false);
   const { user, isAdmin } = useContext(AuthContext);
+  const {
+    getTest,
+    test,
+    testLoading,
+    getQuestionsWithOptionsWithAnswers,
+    questions,
+    questionsLoading,
+    getStatistic,
+  } = useContext(TestContext);
 
   useEffect(() => {
     fetchTest();
@@ -39,52 +40,22 @@ const ViewTest = (props) => {
 
   useEffect(() => {
     if (test && (isAdmin || user.id === test.user.id)) {
-      fetchQuestions();
-      fetchStatistic();
+      fetchTestRelatedInfo();
     }
   }, [user, test, isAdmin]); /* eslint-disable-line */
 
-  const fetchTest = async () => {
-    try {
-      setLoading(true);
-      const { data } = await getTestById(params.id);
-      setTest(data);
-      setLoading(false);
-    } catch (error) {
-      errorNotification(error);
-      setLoading(false);
-    }
-  };
+  const fetchTest = () => getTest(params.id);
+  const fetchQuestions = () => getQuestionsWithOptionsWithAnswers(params.id);
+  const fetchStatistic = () => getStatistic(params.id);
 
-  const fetchQuestions = async () => {
-    try {
-      setQuestionsLoading(true);
-      const { data } = await getQuestionsWithOptionsWithAnswersByTestId(
-        params.id,
-      );
-      setQuestions(data);
-      setQuestionsLoading(false);
-    } catch (error) {
-      errorNotification(error);
-      setQuestionsLoading(false);
-    }
-  };
-
-  const fetchStatistic = async () => {
-    try {
-      setStatisticLoading(true);
-      const { data } = await getTestStatistic(test.id);
-      setStatistic(data);
-      setStatisticLoading(false);
-    } catch (error) {
-      errorNotification(error);
-      setStatisticLoading(false);
-    }
+  const fetchTestRelatedInfo = () => {
+    fetchQuestions();
+    fetchStatistic();
   };
 
   return (
     <Main>
-      {loading ? (
+      {testLoading ? (
         <LoadingScreen />
       ) : (
         test && (
@@ -92,15 +63,13 @@ const ViewTest = (props) => {
             <Grid item xs={12}>
               <TestHeader test={test} />
             </Grid>
+
             <Grid item xs={6}>
               <TestInfo test={test} fetchData={fetchTest} />
             </Grid>
+
             <Grid item xs={6}>
-              <TestStatisticsAndSettings
-                test={test}
-                statistic={statistic}
-                loading={statisticLoading}
-              />
+              <TestStatisticsAndSettings test={test} />
             </Grid>
 
             {(isAdmin || user.id === test.user.id) && (
@@ -110,21 +79,13 @@ const ViewTest = (props) => {
                   xs={12}
                   style={{ paddingTop: "0px", paddingBottom: "0px" }}
                 >
-                  <QuestionsActionBar
-                    fetchQuestions={() => {
-                      fetchQuestions();
-                      fetchStatistic();
-                    }}
-                  />
+                  <QuestionsActionBar fetchQuestions={fetchTestRelatedInfo} />
                 </Grid>
 
                 <Grid item xs={12}>
                   <QuestionsList
                     data={questions}
-                    fetchQuestions={() => {
-                      fetchQuestions();
-                      fetchStatistic();
-                    }}
+                    fetchQuestions={fetchTestRelatedInfo}
                     loading={questionsLoading}
                     disabled
                   />
@@ -138,4 +99,12 @@ const ViewTest = (props) => {
   );
 };
 
-export default ViewTest;
+const HOC = (props) => {
+  return (
+    <TestProvider>
+      <ViewTest {...props} />
+    </TestProvider>
+  );
+};
+
+export default HOC;

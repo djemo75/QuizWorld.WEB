@@ -3,6 +3,7 @@ import { Redirect, Route, Switch } from "react-router-dom";
 
 import { AuthContext } from "./context/AuthContext";
 import Login from "./pages/Login";
+import MyResults from "./pages/MyResults";
 import NotFound from "./pages/NotFound";
 import Register from "./pages/Register";
 import SolveTest from "./pages/SolveTest";
@@ -11,10 +12,12 @@ import TestResults from "./pages/TestResults";
 import Tests from "./pages/Tests";
 import Users from "./pages/Users";
 import ViewTest from "./pages/ViewTest";
+import ViewTestResult from "./pages/ViewTestResult";
 
 export const STATIC_ROUTES = {
   notFound: "/not-found",
   home: "/",
+  myResults: "/",
   login: "/login",
   register: "/register",
   profile: "/profile",
@@ -23,7 +26,7 @@ export const STATIC_ROUTES = {
   viewTest: "/tests/:id",
   solveTest: "/tests/:id/solve",
   testResults: "/tests/:id/results",
-  viewTestResult: "/results/:id",
+  viewTestResult: "/tests/:id/results/:resultId",
   testParticipants: "/tests/:id/participants",
 };
 
@@ -47,11 +50,6 @@ const authRoutes = [
 
 const routes = [
   {
-    path: STATIC_ROUTES.home,
-    exact: true,
-    component: () => <Redirect to={STATIC_ROUTES.tests} />,
-  },
-  {
     path: STATIC_ROUTES.tests,
     exact: true,
     component: () => <Tests />,
@@ -72,14 +70,19 @@ const routes = [
     component: () => <TestResults />,
   },
   {
+    path: STATIC_ROUTES.myResults,
+    exact: true,
+    component: () => <MyResults />,
+  },
+  {
+    path: STATIC_ROUTES.viewTestResult,
+    exact: true,
+    component: () => <ViewTestResult />,
+  },
+  {
     path: STATIC_ROUTES.testParticipants,
     exact: true,
     component: () => <TestParticipants />,
-  },
-  {
-    path: STATIC_ROUTES.profile,
-    exact: true,
-    component: () => <>Profile</>,
   },
   {
     path: STATIC_ROUTES.users,

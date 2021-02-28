@@ -1,7 +1,5 @@
 import axios from "axios";
 
-export const getQuestionsByTestId = (testId) =>
-  axios.get(`/tests/${testId}/questions`);
 export const getQuestionsWithOptionsWithAnswersByTestId = (testId) =>
   axios.get(`/tests/${testId}/questionsWithOptionsWithAnswers`);
 export const getQuestionsWithOptionsByTestId = (testId) =>

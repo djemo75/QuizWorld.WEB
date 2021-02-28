@@ -26,8 +26,8 @@ export const AddParticipantsDialog = ({
       setLoading(false);
       fetchParticipants();
       handleClose();
-    } catch (e) {
-      errorNotification(e);
+    } catch (error) {
+      errorNotification(error);
       setLoading(false);
     }
   };

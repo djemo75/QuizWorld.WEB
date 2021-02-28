@@ -4,22 +4,24 @@ import {
   EmojiPeopleOutlined,
   LiveHelpOutlined,
 } from "@material-ui/icons";
-import React from "react";
+import React, { useContext } from "react";
 import { useHistory } from "react-router-dom";
 
 import { PUBLIC_TEST } from "../../../constants/tests";
+import { TestContext } from "../../../context/TestContext";
 import { STATIC_ROUTES } from "../../../routes";
 import { StatisticItem } from "../../../shared/components/StatisticItem";
 
-export const TestStatisticsAndSettings = ({ test, statistic, loading }) => {
+export const TestStatisticsAndSettings = ({ test }) => {
   const history = useHistory();
+  const { statistic, statisticLoading } = useContext(TestContext);
 
   return (
     <>
       <Paper className="card-statistics-and-settings" elevation={1}>
         <div className="card-content">
           <div className="title">
-            Visibility:{" "}
+            Visibility:
             <Chip
               variant="outlined"
               label={test.visibility}
@@ -39,7 +41,7 @@ export const TestStatisticsAndSettings = ({ test, statistic, loading }) => {
                 icon={<LiveHelpOutlined />}
                 text="Total questions"
                 count={statistic?.totalQuestions}
-                loading={loading}
+                loading={statisticLoading}
               />
             </Grid>
             <Grid item xs={4}>
@@ -47,7 +49,7 @@ export const TestStatisticsAndSettings = ({ test, statistic, loading }) => {
                 icon={<EmojiPeopleOutlined />}
                 text="Total participants"
                 count={statistic?.totalParticipants}
-                loading={loading}
+                loading={statisticLoading}
                 onClick={() =>
                   history.push(
                     STATIC_ROUTES.testParticipants.replace(":id", test.id),
@@ -60,7 +62,7 @@ export const TestStatisticsAndSettings = ({ test, statistic, loading }) => {
                 icon={<CheckCircleOutlined />}
                 text="Total results"
                 count={statistic?.totalResults}
-                loading={loading}
+                loading={statisticLoading}
                 onClick={() =>
                   history.push(
                     STATIC_ROUTES.testResults.replace(":id", test.id),

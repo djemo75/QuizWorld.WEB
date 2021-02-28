@@ -3,10 +3,10 @@ import React, { useEffect, useState } from "react";
 import { infoNotification } from "../../../utils/notifications";
 
 export const TestTimer = ({ duration, setConfirmDialog, score }) => {
-  const [time, setTime] = useState(duration * 60);
+  const [time, setTime] = useState(duration === 0 ? null : duration * 60);
 
   useEffect(() => {
-    if (!score) {
+    if (!score && time !== null) {
       if (time !== 0) {
         setTimeout(() => setTime(time - 1), 1000);
         if (
@@ -33,18 +33,22 @@ export const TestTimer = ({ duration, setConfirmDialog, score }) => {
   return (
     <>
       <div className="timer">
-        <div>
-          {String(hours).length === 1 ? "0" + hours : hours}
-          <span>HRS</span>
-        </div>
-        <div>
-          {String(minutes).length === 1 ? "0" + minutes : minutes}
-          <span>MIN</span>
-        </div>
-        <div>
-          {String(seconds).length === 1 ? "0" + seconds : seconds}
-          <span>SEC</span>
-        </div>
+        {time !== null && (
+          <>
+            <div>
+              {String(hours).length === 1 ? "0" + hours : hours}
+              <span>HRS</span>
+            </div>
+            <div>
+              {String(minutes).length === 1 ? "0" + minutes : minutes}
+              <span>MIN</span>
+            </div>
+            <div>
+              {String(seconds).length === 1 ? "0" + seconds : seconds}
+              <span>SEC</span>
+            </div>
+          </>
+        )}
       </div>
       <style jsx>{`
         .timer {

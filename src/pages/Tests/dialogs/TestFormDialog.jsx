@@ -1,6 +1,5 @@
 import { Button, CircularProgress, Typography } from "@material-ui/core";
 import { Form, Formik } from "formik";
-import moment from "moment";
 import React, { useContext } from "react";
 
 import {
@@ -8,12 +7,12 @@ import {
   TEST_STATUS_OPTIONS,
   TEST_VISIBILITY_OPTIONS,
   UNACTIVE_TEST,
-} from "../../constants/tests";
-import { AuthContext } from "../../context/AuthContext";
-import { CustomDialog } from "../../shared/components/CustomDialog";
-import { FormikField } from "../../shared/components/FormikField";
-import FormikSelect from "../../shared/components/FormikSelect";
-import { testSchema } from "../../validationSchemas/testSchema";
+} from "../../../constants/tests";
+import { AuthContext } from "../../../context/AuthContext";
+import { CustomDialog } from "../../../shared/components/CustomDialog";
+import { FormikField } from "../../../shared/components/FormikField";
+import FormikSelect from "../../../shared/components/FormikSelect";
+import { testSchema } from "../../../validationSchemas/testSchema";
 
 export const TestFormDialog = ({
   visible,
@@ -21,6 +20,7 @@ export const TestFormDialog = ({
   values,
   handleSubmit,
   editMode,
+  loading,
 }) => {
   const { user } = useContext(AuthContext);
 
@@ -44,8 +44,8 @@ export const TestFormDialog = ({
     duration: values?.duration ? values.duration : "",
     visibility: values?.visibility ? values.visibility : PUBLIC_TEST,
     status: values?.status ? values.status : UNACTIVE_TEST,
-    createdAt: moment().utc(new Date()),
   };
+
   return (
     <CustomDialog
       title={editMode ? "Edit Test" : "Create Test"}
@@ -56,7 +56,7 @@ export const TestFormDialog = ({
         onSubmit={handleSubmit}
         validationSchema={testSchema}
       >
-        {({ errors, touched, isSubmitting }) => {
+        {({ errors, touched }) => {
           return (
             <>
               <Form className="create-test-form" noValidate>
@@ -65,7 +65,7 @@ export const TestFormDialog = ({
                   label="Name"
                   name="name"
                   error={touched.name && errors.name}
-                  disabled={isSubmitting}
+                  disabled={loading}
                   size="small"
                   fullWidth
                   required
@@ -74,7 +74,7 @@ export const TestFormDialog = ({
                   label="Description"
                   name="description"
                   error={touched.description && errors.description}
-                  disabled={isSubmitting}
+                  disabled={loading}
                   size="small"
                   fullWidth
                   multiline
@@ -85,7 +85,7 @@ export const TestFormDialog = ({
                     label="Status"
                     name="status"
                     items={TEST_STATUS_OPTIONS}
-                    disabled={isSubmitting}
+                    disabled={loading}
                     size="small"
                     error={touched.status && errors.status}
                     fullWidth
@@ -95,7 +95,7 @@ export const TestFormDialog = ({
                   label="Visibility"
                   name="visibility"
                   items={TEST_VISIBILITY_OPTIONS}
-                  disabled={isSubmitting}
+                  disabled={loading}
                   size="small"
                   error={touched.visibility && errors.visibility}
                   fullWidth
@@ -104,7 +104,7 @@ export const TestFormDialog = ({
                   label="Duration (minutes)"
                   name="duration"
                   error={touched.duration && errors.duration}
-                  disabled={isSubmitting}
+                  disabled={loading}
                   size="small"
                   fullWidth
                 />
@@ -113,7 +113,7 @@ export const TestFormDialog = ({
                     color="primary"
                     className="cancel-btn"
                     onClick={handleClose}
-                    disabled={isSubmitting}
+                    disabled={loading}
                   >
                     Cancel
                   </Button>
@@ -122,8 +122,8 @@ export const TestFormDialog = ({
                     variant="contained"
                     color="primary"
                     className="submit-btn"
-                    disabled={isSubmitting || hasErrors(touched, errors)}
-                    startIcon={isSubmitting && <CircularProgress size="20px" />}
+                    disabled={loading || hasErrors(touched, errors)}
+                    startIcon={loading && <CircularProgress size="20px" />}
                   >
                     {editMode ? "Edit" : "Create"}
                   </Button>

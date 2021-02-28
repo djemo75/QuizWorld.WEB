@@ -49,6 +49,7 @@ export const TestHeader = ({
             avatar={<Timelapse />}
           />
         </Box>
+
         {shoudShowTimer ? (
           <TestTimer
             duration={test.duration}
@@ -83,19 +84,19 @@ export const TestHeader = ({
           <>
             {test.status === ACTIVE_TEST ? (
               test.description && (
-                <Alert severity="info" className="info-alert">
+                <Alert severity="info" className="alert">
                   {test.description}
                 </Alert>
               )
             ) : (
-              <Alert severity="warning" style={{ backgroundColor: "#fff" }}>
+              <Alert severity="warning" className="alert">
                 The test is not active. Please try again later!
               </Alert>
             )}
           </>
         ) : (
           <Box>
-            <Alert severity="error" style={{ backgroundColor: "#fff" }}>
+            <Alert severity="error" className="alert">
               You are not included in the list of participants. Please contact
               the test creator.
             </Alert>
@@ -118,8 +119,9 @@ export const TestHeader = ({
         :global(.test-description) {
           margin-top: 20px;
         }
-        :global(.test-description .info-alert) {
+        :global(.test-description .alert) {
           white-space: pre-wrap;
+          background: #fff;
         }
       `}</style>
     </>

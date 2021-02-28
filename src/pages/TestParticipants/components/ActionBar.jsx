@@ -19,6 +19,7 @@ export const ActionBar = ({
           name="searchString"
           value={searchString}
           onChange={(e) => setSearchString(e.target.value)}
+          onKeyPress={({ charCode }) => charCode === 13 && fetchParticipants()}
           variant="outlined"
           size="small"
         />
@@ -35,6 +36,7 @@ export const ActionBar = ({
           Add Participants
         </Button>
       </Box>
+
       {visible && (
         <AddParticipantsDialog
           visible={visible}

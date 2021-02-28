@@ -98,9 +98,7 @@ export const QuestionFormDialog = ({
         await createQuestion(values);
       }
 
-      setSubmitting(false);
-      handleClose();
-      await fetchQuestions();
+      fetchQuestions();
       successNotification(
         editMode
           ? "Successfully updated question!"
@@ -108,6 +106,7 @@ export const QuestionFormDialog = ({
       );
     } catch (error) {
       errorNotification(error);
+    } finally {
       setSubmitting(false);
       handleClose();
     }
@@ -141,7 +140,14 @@ export const QuestionFormDialog = ({
           onSubmit={handleSubmit}
           validationSchema={questionSchema}
         >
-          {({ errors, touched, values, setFieldValue, isSubmitting }) => {
+          {({
+            errors,
+            touched,
+            values,
+            setFieldValue,
+            handleBlur,
+            isSubmitting,
+          }) => {
             return (
               <>
                 <Form className="question-form" noValidate>
@@ -154,7 +160,6 @@ export const QuestionFormDialog = ({
                     fullWidth
                     required
                   />
-
                   <RadioGroup
                     onChange={(e) => {
                       const updatedOptions = values.options.map(

@@ -21,7 +21,7 @@ export const JoinTestDialog = ({ visible, handleClose }) => {
       setLoading(false);
       handleClose();
       history.push(STATIC_ROUTES.solveTest.replace(":id", data.id));
-    } catch (e) {
+    } catch (error) {
       setError(error);
       setLoading(false);
     }
@@ -41,6 +41,7 @@ export const JoinTestDialog = ({ visible, handleClose }) => {
           name="joinCode"
           value={value}
           onChange={(e) => setValue(e.target.value.toUpperCase())}
+          onKeyPress={({ charCode }) => charCode === 13 && handleJoin()}
           size="small"
           fullWidth
         />

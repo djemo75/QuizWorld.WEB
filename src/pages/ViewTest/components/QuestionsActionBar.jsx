@@ -5,6 +5,7 @@ import { QuestionFormDialog } from "./QuestionFormDialog";
 
 export const QuestionsActionBar = ({ fetchQuestions }) => {
   const [visible, setVisible] = useState(false);
+
   return (
     <Box textAlign="right">
       <Button
