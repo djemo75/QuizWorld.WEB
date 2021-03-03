@@ -11,6 +11,7 @@ import ResultProvider, { ResultContext } from "../../context/ResultContext";
 import { BackButton } from "../../shared/components/BackButton";
 import { LoadingScreen } from "../../shared/components/LoadingScreen";
 import { Main } from "../../shared/components/Main";
+import { SanitizeHtml } from "../../shared/components/SanitizeHtml";
 
 export const ViewTestResult = (props) => {
   const { resultId, id: testId } = useParams();
@@ -99,7 +100,7 @@ export const ViewTestResult = (props) => {
               <Box key={index} component={Paper} className="questions-wrapper">
                 <Box display="flex" alignItems="center">
                   <Box className="question-index">{index + 1}</Box>
-                  <Box>{question.question}</Box>
+                  <SanitizeHtml html={question.question} />
                 </Box>
                 {question.options && (
                   <Box ml={4.25} mt={2}>

@@ -12,6 +12,7 @@ import React, { useContext, useState } from "react";
 
 import { AuthContext } from "../../../context/AuthContext";
 import { TestContext } from "../../../context/TestContext";
+import { SanitizeHtml } from "../../../shared/components/SanitizeHtml";
 import { TestFormDialog } from "../../Tests/dialogs/TestFormDialog";
 import { DeleteTestDialog } from "../dialogs/DeleteTestDialog";
 
@@ -97,7 +98,7 @@ export const TestInfo = ({ test }) => {
             color="textSecondary"
             component="div"
           >
-            {test.description}
+            <SanitizeHtml html={test.description} />
           </Typography>
         </CardContent>
       </Card>

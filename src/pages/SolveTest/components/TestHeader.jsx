@@ -4,6 +4,7 @@ import Alert from "@material-ui/lab/Alert";
 import React from "react";
 
 import { ACTIVE_TEST } from "../../../constants/tests";
+import { SanitizeHtml } from "../../../shared/components/SanitizeHtml";
 import { TestTimer } from "./TestTimer";
 
 export const TestHeader = ({
@@ -85,7 +86,7 @@ export const TestHeader = ({
             {test.status === ACTIVE_TEST ? (
               test.description && (
                 <Alert severity="info" className="alert">
-                  {test.description}
+                  <SanitizeHtml html={test.description} />
                 </Alert>
               )
             ) : (

@@ -20,6 +20,7 @@ import {
 import { addQuestion, editQuestionById } from "../../../services/questions";
 import { CustomDialog } from "../../../shared/components/CustomDialog";
 import { FormikField } from "../../../shared/components/FormikField";
+import { TextEditor } from "../../../shared/components/TextEditor";
 import { ValidationError } from "../../../shared/components/ValidationError";
 import {
   errorNotification,
@@ -140,26 +141,20 @@ export const QuestionFormDialog = ({
           onSubmit={handleSubmit}
           validationSchema={questionSchema}
         >
-          {({
-            errors,
-            touched,
-            values,
-            setFieldValue,
-            handleBlur,
-            isSubmitting,
-          }) => {
+          {({ errors, touched, values, setFieldValue, isSubmitting }) => {
             return (
               <>
                 <Form className="question-form" noValidate>
-                  <FormikField
-                    label="Question"
-                    name="question"
-                    error={touched.question && errors.question}
+                  <TextEditor
+                    value={values.question}
+                    onChange={(value) => setFieldValue("question", value)}
+                    placeholder="Question"
                     disabled={isSubmitting}
-                    size="small"
-                    fullWidth
-                    required
                   />
+                  {touched.question && errors.question && (
+                    <ValidationError error={errors.question} />
+                  )}
+
                   <RadioGroup
                     onChange={(e) => {
                       const updatedOptions = values.options.map(

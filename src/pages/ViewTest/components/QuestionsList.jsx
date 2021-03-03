@@ -11,6 +11,7 @@ import { isEmpty } from "lodash";
 import React, { useEffect, useState } from "react";
 
 import { LoadingScreen } from "../../../shared/components/LoadingScreen";
+import { SanitizeHtml } from "../../../shared/components/SanitizeHtml";
 import { DeleteQuestionDialog } from "../dialogs/DeleteQuestionDialog";
 import { QuestionFormDialog } from "./QuestionFormDialog";
 
@@ -124,7 +125,7 @@ export const QuestionsList = ({
               <Paper className="questions-wrapper" key={index + 1}>
                 <Box display="flex" alignItems="center">
                   <span className="question-index">{index + 1}</span>{" "}
-                  {question.question}
+                  <SanitizeHtml html={question.question} />
                   {showActions && getActions(question)}
                 </Box>
                 {!isEmpty(question.options) && (

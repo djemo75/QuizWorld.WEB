@@ -1,3 +1,5 @@
+import "react-quill/dist/quill.snow.css";
+
 import React, { useContext } from "react";
 
 import { AuthContext } from "./context/AuthContext";

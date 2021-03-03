@@ -23,9 +23,18 @@ const validateCorrectOption = (options) => {
   }
 };
 
+const validateQuestion = (question) => {
+  if (question.replace(/<(.|\n)*?>/g, "").trim().length === 0) {
+    return false;
+  } else {
+    return true;
+  }
+};
+
 export const questionSchema = Yup.object().shape({
   question: Yup.string()
     .min(4, "Minimum field length is 4 characters")
+    .test("question", "This Field is Requried", validateQuestion)
     .required("This Field is Requried"),
   options: Yup.array()
     .test("options", "Please insert minimum two options", validateOptionsLength)

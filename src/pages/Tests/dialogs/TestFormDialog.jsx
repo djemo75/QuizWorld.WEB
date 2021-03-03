@@ -12,6 +12,7 @@ import { AuthContext } from "../../../context/AuthContext";
 import { CustomDialog } from "../../../shared/components/CustomDialog";
 import { FormikField } from "../../../shared/components/FormikField";
 import FormikSelect from "../../../shared/components/FormikSelect";
+import { TextEditor } from "../../../shared/components/TextEditor";
 import { testSchema } from "../../../validationSchemas/testSchema";
 
 export const TestFormDialog = ({
@@ -56,7 +57,7 @@ export const TestFormDialog = ({
         onSubmit={handleSubmit}
         validationSchema={testSchema}
       >
-        {({ errors, touched }) => {
+        {({ errors, touched, values, setFieldValue }) => {
           return (
             <>
               <Form className="create-test-form" noValidate>
@@ -70,14 +71,11 @@ export const TestFormDialog = ({
                   fullWidth
                   required
                 />
-                <FormikField
-                  label="Description"
-                  name="description"
-                  error={touched.description && errors.description}
+                <TextEditor
+                  value={values.description}
+                  onChange={(value) => setFieldValue("description", value)}
+                  placeholder="Description"
                   disabled={loading}
-                  size="small"
-                  fullWidth
-                  multiline
                 />
                 <Typography variant="h6">Settings:</Typography>
                 {editMode && (
