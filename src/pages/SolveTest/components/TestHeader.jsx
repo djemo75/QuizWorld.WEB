@@ -21,6 +21,7 @@ export const TestHeader = ({
   return (
     <>
       <Box
+        className="test-header"
         component={Paper}
         display="flex"
         justifyContent="space-between"
@@ -28,56 +29,64 @@ export const TestHeader = ({
         color="primary.contrastText"
         padding="16px 30px"
       >
-        <Box display="flex" alignItems="center">
+        <Box display="flex" alignItems="center" className="left-side">
           <div className="test-title">{test.name}</div>
-          <Chip
-            variant="default"
-            label={test.status}
-            size="small"
-            style={{
-              minWidth: "80px",
-              textTransform: "capitalize",
-              background: `${
-                test.status === ACTIVE_TEST ? "#19d320" : "#f50000"
-              }`,
-              color: "#fff",
-            }}
-          />
-          <Chip
-            label={test.duration ? <>{test.duration} min</> : "unlimited"}
-            variant="outlined"
-            className="test-status"
-            avatar={<Timelapse />}
-          />
+          <Box
+            display="flex"
+            alignItems="center"
+            className="status-and-duration"
+          >
+            <Chip
+              variant="default"
+              label={test.status}
+              size="small"
+              style={{
+                minWidth: "80px",
+                textTransform: "capitalize",
+                background: `${
+                  test.status === ACTIVE_TEST ? "#19d320" : "#f50000"
+                }`,
+                color: "#fff",
+              }}
+            />
+            <Chip
+              label={test.duration ? <>{test.duration} min</> : "unlimited"}
+              variant="outlined"
+              className="test-status"
+              avatar={<Timelapse />}
+            />
+          </Box>
         </Box>
 
-        {shoudShowTimer ? (
-          <TestTimer
-            duration={test.duration}
-            setConfirmDialog={setConfirmDialog}
-            score={score}
-          />
-        ) : (
-          <>
-            {test.status === ACTIVE_TEST && test.accessForSolving && (
-              <Box display="flex" alignItems="center" color="#FFF">
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="secondary"
-                  className="submit-btn"
-                  onClick={handleStart}
-                  style={{
-                    background: "#19d320",
-                    color: "#fff",
-                  }}
-                >
-                  Start
-                </Button>
-              </Box>
-            )}
-          </>
-        )}
+        <Box className="right-side">
+          {shoudShowTimer ? (
+            <TestTimer
+              duration={test.duration}
+              setConfirmDialog={setConfirmDialog}
+              score={score}
+            />
+          ) : (
+            <>
+              {test.status === ACTIVE_TEST && test.accessForSolving && (
+                <Box display="flex" alignItems="center" color="#FFF">
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="secondary"
+                    className="submit-btn"
+                    onClick={handleStart}
+                    style={{
+                      background: "#19d320",
+                      color: "#fff",
+                    }}
+                  >
+                    Start
+                  </Button>
+                </Box>
+              )}
+            </>
+          )}
+        </Box>
       </Box>
 
       <Box className="test-description">
@@ -123,6 +132,27 @@ export const TestHeader = ({
         :global(.test-description .alert) {
           white-space: pre-wrap;
           background: #fff;
+        }
+        @media screen and (max-width: 600px) {
+          :global(.test-header) {
+            flex-direction: column;
+            padding: 16px;
+          }
+          :global(.test-header .right-side) {
+            justify-content: center;
+          }
+          :global(.test-header .left-side) {
+            flex-direction: column;
+          }
+          :global(.test-header .left-side .status-and-duration) {
+            width: 100%;
+            justify-content: space-between;
+            margin-bottom: 10px;
+          }
+          :global(.test-header .left-side .test-title) {
+            width: 100%;
+            margin-right: 0px;
+          }
         }
       `}</style>
     </>

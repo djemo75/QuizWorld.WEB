@@ -36,7 +36,7 @@ export const testResultsTableColumns = (actions) => [
   },
   {
     render: ({ id, username }) => (
-      <Box textAlign="right">
+      <Box display="flex" justifyContent="flex-end">
         <Button
           variant="outlined"
           color="primary"

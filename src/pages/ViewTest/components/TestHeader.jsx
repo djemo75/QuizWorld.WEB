@@ -34,43 +34,53 @@ export const TestHeader = ({ test }) => {
         bgcolor="primary.dark"
         color="primary.contrastText"
         padding="16px 30px"
+        className="test-header"
       >
-        <Box display="flex" alignItems="center">
+        <Box display="flex" alignItems="center" className="left-side">
           <div className="test-title">{test.name}</div>
-          <Chip
-            variant="default"
-            label={test.status}
-            size="small"
-            style={{
-              minWidth: "80px",
-              textTransform: "capitalize",
-              background: `${
-                test.status === ACTIVE_TEST ? "#19d320" : "#f50000"
-              }`,
-              color: "#fff",
-            }}
-          />
-          {test.status === ACTIVE_TEST && (
-            <Box display="flex" alignItems="center" marginLeft="15px">
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                onClick={() => {
-                  history.push(STATIC_ROUTES.solveTest.replace(":id", test.id));
-                }}
-                style={{
-                  background: "#19d320",
-                  color: "#fff",
-                }}
-              >
-                Start
-              </Button>
-            </Box>
-          )}
+          <Box display="flex" alignItems="center" className="status-and-button">
+            <Chip
+              variant="default"
+              label={test.status}
+              size="small"
+              style={{
+                minWidth: "80px",
+                textTransform: "capitalize",
+                background: `${
+                  test.status === ACTIVE_TEST ? "#19d320" : "#f50000"
+                }`,
+                color: "#fff",
+              }}
+            />
+            {test.status === ACTIVE_TEST && (
+              <Box display="flex" alignItems="center" marginLeft="15px">
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
+                    history.push(
+                      STATIC_ROUTES.solveTest.replace(":id", test.id),
+                    );
+                  }}
+                  style={{
+                    background: "#19d320",
+                    color: "#fff",
+                  }}
+                >
+                  Start
+                </Button>
+              </Box>
+            )}
+          </Box>
         </Box>
         {test.joinCode && (isAdmin || user.id === test.user.id) && (
-          <Box display="flex" alignItems="center" color="#FFF">
+          <Box
+            display="flex"
+            alignItems="center"
+            color="#FFF"
+            className="code-wrapper"
+          >
             <div className="code-label">
               <div className="code-label-text">JOIN CODE</div>
               <div className="code-description">Used to join in test</div>
@@ -111,6 +121,25 @@ export const TestHeader = ({ test }) => {
         :global(.copy-button svg) {
           height: 14px;
           width: 14px;
+        }
+        @media screen and (max-width: 600px) {
+          :global(.test-header) {
+            flex-direction: column;
+            padding: 16px;
+          }
+          :global(.test-header .left-side) {
+            flex-direction: column;
+          }
+          :global(.test-header .left-side .status-and-button) {
+            justify-content: space-between;
+            width: 100%;
+          }
+          :global(.test-header .code-wrapper) {
+            justify-content: flex-end;
+          }
+          :global(.test-header .code-wrapper .code-label) {
+            margin-right: auto;
+          }
         }
       `}</style>
     </>

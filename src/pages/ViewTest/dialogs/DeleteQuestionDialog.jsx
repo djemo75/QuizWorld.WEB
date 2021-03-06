@@ -36,7 +36,6 @@ export const DeleteQuestionDialog = ({
         title="Are you sure you want to delete this question?"
         visible={visible}
       >
-        {question && question.question}
         <div className="actions">
           <Button
             color="primary"

@@ -1,4 +1,10 @@
-import { Chip, Menu, MenuItem } from "@material-ui/core";
+import {
+  Chip,
+  Menu,
+  MenuItem,
+  useMediaQuery,
+  useTheme,
+} from "@material-ui/core";
 import Avatar from "@material-ui/core/Avatar";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -19,6 +25,8 @@ import { DeleteTestDialog } from "../dialogs/DeleteTestDialog";
 const DEFAULT_VISIBLE_STATE = { delete: false, edit: false };
 
 export const TestInfo = ({ test }) => {
+  const theme = useTheme();
+  const isMobileView = useMediaQuery(theme.breakpoints.down("xs"));
   const [anchorEl, setAnchorEl] = useState(null);
   const [visible, setVisible] = useState(DEFAULT_VISIBLE_STATE);
   const { user, isAdmin } = useContext(AuthContext);
@@ -28,14 +36,67 @@ export const TestInfo = ({ test }) => {
     editTest(test.id, values, () => setVisible(false));
   };
 
+  const getTestActions = () => {
+    return isAdmin || user.id === test.user.id ? (
+      <>
+        <IconButton
+          aria-label="settings"
+          onClick={({ currentTarget }) => setAnchorEl(currentTarget)}
+        >
+          <MoreVertIcon />
+        </IconButton>
+        <Menu
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          transformOrigin={{ vertical: "top", horizontal: "center" }}
+          getContentAnchorEl={null}
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={() => setAnchorEl(null)}
+        >
+          <MenuItem
+            onClick={() => {
+              setVisible({ delete: false, edit: true });
+              setAnchorEl(null);
+            }}
+          >
+            Edit
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              setVisible({ delete: true, edit: false });
+              setAnchorEl(null);
+            }}
+          >
+            Delete
+          </MenuItem>
+        </Menu>
+      </>
+    ) : (
+      <i style={{ width: "48px", height: "48px" }}></i>
+    );
+  };
+
   return (
     <>
       <Card className="info-card">
         <CardHeader
           avatar={
-            <Avatar aria-label="recipe" className="avatar">
-              {test.name[0]}
-            </Avatar>
+            <>
+              <Avatar className="avatar">
+                {test.user.username.toUpperCase()[0]}
+              </Avatar>
+              <div>
+                <div>
+                  <b>Author</b>: {test.user.username}
+                </div>
+                <div style={{ color: "#808080" }}>
+                  {moment(test.createdAt).format("MMM. D, YYYY [at] h:mm A z")}
+                </div>
+              </div>
+              {isMobileView && (
+                <div style={{ marginLeft: "auto" }}>{getTestActions()}</div>
+              )}
+            </>
           }
           action={
             <>
@@ -45,51 +106,9 @@ export const TestInfo = ({ test }) => {
                 className="test-status"
                 avatar={<Timelapse />}
               />
-              {isAdmin || user.id === test.user.id ? (
-                <>
-                  <IconButton
-                    aria-label="settings"
-                    onClick={({ currentTarget }) => setAnchorEl(currentTarget)}
-                  >
-                    <MoreVertIcon />
-                  </IconButton>
-                  <Menu
-                    id="simple-menu"
-                    anchorEl={anchorEl}
-                    open={Boolean(anchorEl)}
-                    onClose={() => setAnchorEl(null)}
-                  >
-                    <MenuItem
-                      onClick={() => {
-                        setVisible({ delete: false, edit: true });
-                        setAnchorEl(null);
-                      }}
-                    >
-                      Edit
-                    </MenuItem>
-                    <MenuItem
-                      onClick={() => {
-                        setVisible({ delete: true, edit: false });
-                        setAnchorEl(null);
-                      }}
-                    >
-                      Delete
-                    </MenuItem>
-                  </Menu>
-                </>
-              ) : (
-                <i style={{ width: "48px", height: "48px" }}></i>
-              )}
+              {!isMobileView && getTestActions()}
             </>
           }
-          title={
-            <>
-              <b>Author</b>: {test.user.username}
-            </>
-          }
-          subheader={moment(test.createdAt).format(
-            "MMM. D, YYYY [at] h:mm A z",
-          )}
         />
         <CardContent className="info-card-content">
           <Typography
@@ -139,6 +158,26 @@ export const TestInfo = ({ test }) => {
         }
         :global(.info-card .test-description) {
           white-space: pre-wrap;
+        }
+        :global(.info-card .MuiCardHeader-root .MuiCardHeader-avatar) {
+          display: flex;
+        }
+        :global(.info-card .MuiCardHeader-avatar .MuiAvatar-root) {
+          margin-right: 10px;
+        }
+        @media screen and (max-width: 600px) {
+          :global(.info-card .MuiCardHeader-root) {
+            flex-direction: column;
+          }
+          :global(.info-card .MuiCardHeader-root > div) {
+            width: 100%;
+          }
+          :global(.info-card .MuiCardHeader-avatar) {
+            margin-right: 0px;
+          }
+          :global(.info-card .MuiCardHeader-action) {
+            justify-content: flex-end;
+          }
         }
       `}</style>
     </>

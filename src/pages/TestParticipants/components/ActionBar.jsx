@@ -1,4 +1,10 @@
-import { Box, Button, TextField } from "@material-ui/core";
+import {
+  Box,
+  Button,
+  TextField,
+  useMediaQuery,
+  useTheme,
+} from "@material-ui/core";
 import React, { useState } from "react";
 
 import { SearchButton } from "../../../shared/components/SearchButton";
@@ -9,6 +15,8 @@ export const ActionBar = ({
   searchString,
   setSearchString,
 }) => {
+  const theme = useTheme();
+  const isMobileView = useMediaQuery(theme.breakpoints.down("xs"));
   const [visible, setVisible] = useState(false);
 
   return (
@@ -29,11 +37,12 @@ export const ActionBar = ({
 
       <Box textAlign="right">
         <Button
+          className="add-participant-button"
           variant="contained"
           color="primary"
           onClick={() => setVisible(true)}
         >
-          Add Participants
+          {isMobileView ? "Add" : "Add Participants"}
         </Button>
       </Box>
 

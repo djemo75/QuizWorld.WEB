@@ -139,9 +139,11 @@ export const CustomTable = ({
         :global(.MuiTableHead-root .MuiTableCell-root) {
           padding: 22px 16px;
           font-weight: bold;
+          white-space: nowrap;
         }
         :global(.MuiTableBody-root .MuiTableCell-root) {
           padding: 10px 16px;
+          white-space: nowrap;
         }
         :global(.MuiTableBody-root .MuiTableCell-root a) {
           color: #2196f3;

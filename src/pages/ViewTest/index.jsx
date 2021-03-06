@@ -64,11 +64,11 @@ const ViewTest = (props) => {
               <TestHeader test={test} />
             </Grid>
 
-            <Grid item xs={6}>
+            <Grid item xs={12} md={6}>
               <TestInfo test={test} fetchData={fetchTest} />
             </Grid>
 
-            <Grid item xs={6}>
+            <Grid item xs={12} md={6}>
               <TestStatisticsAndSettings test={test} />
             </Grid>
 
