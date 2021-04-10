@@ -2,6 +2,7 @@ import { Box, Button, TextField } from "@material-ui/core";
 import React, { useContext, useEffect, useState } from "react";
 
 import { INITIAL_PAGE_SIZE } from "../../constants/table";
+import { AuthContext } from "../../context/AuthContext";
 import TestProvider, { TestContext } from "../../context/TestContext";
 import { CustomTable } from "../../shared/components/CustomTable";
 import { Main } from "../../shared/components/Main";
@@ -28,6 +29,7 @@ const Tests = (props) => {
     createTest,
     createTestLoading,
   } = useContext(TestContext);
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
     fetchData();
@@ -78,7 +80,7 @@ const Tests = (props) => {
       </Box>
 
       <CustomTable
-        columns={testTableColumns}
+        columns={testTableColumns(user)}
         data={tests}
         totalCount={testsTotal}
         pageNumber={pageNumber}

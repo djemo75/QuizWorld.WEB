@@ -6,13 +6,20 @@ import { Link } from "react-router-dom";
 import { ACTIVE_TEST, PUBLIC_TEST } from "../../constants/tests";
 import { STATIC_ROUTES } from "../../routes";
 
-export const testTableColumns = [
+export const testTableColumns = (user) => [
   {
     columnName: "Name",
     fieldName: "name",
     render: (rowData) => (
       <Tooltip title="View Details" placement="top" arrow>
-        <Link to={STATIC_ROUTES.viewTest.replace(":id", rowData.id)}>
+        <Link
+          to={
+            user.role === "admin" ||
+            (user.role === "user" && rowData.userId === user.id)
+              ? STATIC_ROUTES.viewTest.replace(":id", rowData.id)
+              : STATIC_ROUTES.solveTest.replace(":id", rowData.id)
+          }
+        >
           {rowData.name}
         </Link>
       </Tooltip>
