@@ -1,70 +1,46 @@
-# Getting Started with Create React App
+![Project proposal](https://i.ibb.co/NmjSDDX/proposal.png)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Project Title - QuizWorld
 
-## Available Scripts
+My motivation for creating this project is a result of the current situation in the country because of the Covid virus. All training in the country went online. So the idea is to create a quiz type questionnaire that other users can answer.
+The project is a web application in which people register so they can create a quiz with questions. Anyone authorized in the application can answer the appropriate test and see their result.
 
-In the project directory, you can run:
+### Features
 
-### `yarn start`
+*	User registration and login in the application
+* Create, edit and delete a test
+*	View the list of all tests with pagination, sort and search functionality (users see only public and own tests, but admin see all)
+* Join to test with join code (unique)
+*	Add, edit and delete questions and possible answers
+*	Add and remove participants to test (used for private tests)
+*	View the list of all participants to related test with pagination and search functionality
+*	View the result of the test after solving
+*	Delete result to related test(only test owner can do this and admin)
+*	View the list of all results to related test with pagination and search functionality
+*	Search and view personal results in separate page
+*	View the list of all users with pagination, sort and search functionality
+*	View statistic for every test - total questions, participants, results
+*	Edit test description and question with rich text editor
+*	Functionality for locking and unlocking users by an administrator - IN FUTURE
+*	Accumulation of points - IN FUTURE
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### Technology stack
 
-### `yarn test`
+The project consists of a combination of coding frameworks and languages, like for Front-End is used JavaScript, HTML, CSS, and ReactJS. For Back-End is used Express js, which is the Node.js web application framework. For database is be used MySQL.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Link to Back-End: [QuizWorld.API](https://github.com/djemo75/QuizWorld.API "QuizWorld.API")
 
-### `yarn build`
+### Screenshots from application 
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+![Image1](https://i.ibb.co/x6M562M/1.png)
+![Image2](https://i.ibb.co/GC6FscP/2.png)
+![Image3](https://i.ibb.co/crRYcJc/3.png)
+![Image4](https://i.ibb.co/mvHbzhG/4.png)
+![Image5](https://i.ibb.co/cTMznFh/5.png)
+![Image6](https://i.ibb.co/sKzXVtR/6.png)
+![Image11](https://i.ibb.co/j5hMK4K/11.png)
+![Image7](https://i.ibb.co/XVv6Np9/7.png)
+![Image8](https://i.ibb.co/y0pfg3P/8.png)
+![Image9](https://i.ibb.co/B3XLv0s/9.png)
+![Image10](https://i.ibb.co/rpV30wb/10.png)
